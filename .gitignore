@@ -1,0 +1,10 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual Environment created by Poetry
+.venv/
+
+# Lock file - Poetry zarządza nim, więc można go zostawić, ale czasami się go ignoruje.
+# W przypadku projektów, które będą używane przez innych, ZOSTAW plik lock!
+# .git-lock
