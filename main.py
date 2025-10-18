@@ -1,29 +1,27 @@
 import requests
 from typing import Optional
 
-# Adres URL do pobrania, zgodnie z treścią zadania
 PLIK_URL = "https://oleksandr-fedoruk.com/wp-content/uploads/2025/10/sample.csv"
-PLIK_URL_404 = "https://httpstat.us/404"  # Dodatkowy URL do testowania 404
-PLIK_URL_503 = "https://httpstat.us/503"  # Dodatkowy URL do testowania 503
-
-# =================================================================
-# NOWE KLASY WYJĄTKÓW (zgodnie z zadaniem)
-# =================================================================
+PLIK_URL_404 = "https://httpstat.us/404"
+PLIK_URL_503 = "https://httpstat.us/503"
 
 class DownloadError(Exception):
-    """Bazowa klasa dla wyjątków związanych z pobieraniem plików."""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print("--- Jestem w klasie dla wyjątków związanych z pobieraniem plików. ---")
     pass
 
 class NotFoundError(DownloadError):
-    """Wyjątek rzucany, gdy plik nie zostanie znaleziony (kod 404)."""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print("--- Jestem w klasie dla wyjątków związanych z kodem 404. ---")
     pass
 
 class AccessDeniedError(DownloadError):
-    """Wyjątek rzucany, gdy dostęp do pliku jest zabroniony (kod 503)."""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print("--- Jestem w klasie dla wyjątków związanych z kodem 503. ---")
     pass
-
-# =================================================================
-
 
 def download_file(url: str, filename: Optional[str] = "latest.csv") -> bool:
     if not url:
