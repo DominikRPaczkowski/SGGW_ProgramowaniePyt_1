@@ -1,5 +1,7 @@
 import requests
 import csv
+import time
+from functools import wraps
 from typing import Optional, Generator, Tuple, List, Any
 
 PLIK_URL = "https://oleksandr-fedoruk.com/wp-content/uploads/2025/10/sample.csv"
@@ -25,6 +27,28 @@ class AccessDeniedError(DownloadError):
         print("--- Jestem w klasie dla wyjątków związanych z kodem 503. ---")
     pass
 
+
+def log_execution_time(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        
+        if args and hasattr(args[0], '__class__'):
+            func_display_name = f"{args[0].__class__.__name__}.{func.__name__}"
+        else:
+            func_display_name = func.__name__
+
+        print(f"\n[LOG CZASU] Rozpoczynam wykonanie: {func_display_name}...")
+        start_time = time.time()
+
+        result = func(*args, **kwargs)
+        
+        end_time = time.time()
+        duration = end_time - start_time
+        
+        print(f"[LOG CZASU] Zakończono wykonanie: {func_display_name}. Czas trwania: {duration:.4f} s.")
+
+        return result
+    return wrapper
 
 def download_file(url: str, filename: Optional[str] = "latest.csv") -> str:
     if not url:
@@ -158,6 +182,7 @@ class ETLProcessor:
         except Exception as e:
             print(f"Nieznany błąd podczas zapisu ETL: {e}")
 
+    @log_execution_time
     def run(self, values_file: str = "values.csv", missing_file: str = "missing_values.csv"):
 
         print("Uruchamiam pełen proces ETL...")
